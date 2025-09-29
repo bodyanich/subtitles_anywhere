@@ -39,3 +39,12 @@
 
 # debug information files
 *.dwo
+
+external/
+build/
+build-Debug/
+build-Release/
+bin/
+.vscode
+CHECK.*
+*.txt.user
