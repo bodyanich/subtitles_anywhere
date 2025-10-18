@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
-project(keyhook_test VERSION 0.1 LANGUAGES CXX)
+project(subtitles_anywhere VERSION 0.1 LANGUAGES CXX)
 
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
