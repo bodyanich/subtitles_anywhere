@@ -20,8 +20,8 @@ public:
                                         QString* error = nullptr) = 0;
     virtual bool unregisterGlobalShortcut(const QString& name) = 0;
 
-    virtual bool setLowLevelKeyboardHook();
-    virtual void unsetLowLevelKeyboardHook();
+    virtual bool setLowLevelKeyboardHook() = 0;
+    virtual void unsetLowLevelKeyboardHook() = 0;
 
 signals:
     void globalShortcutTriggered(const QString& name, const QString& search = {});
