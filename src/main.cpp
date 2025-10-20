@@ -6,6 +6,9 @@
 #include <QAbstractNativeEventFilter>
 #include <windows.h>
 
+#include <QScreen>
+#include <QRect>
+
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
@@ -14,12 +17,17 @@ int main(int argc, char *argv[])
     osUtils->registerGlobalShortcut("space", Qt::Key_Space, Qt::ControlModifier);
     osUtils->setLowLevelKeyboardHook();
 
-    QObject::connect(osUtils, &OSUtilsBase::globalShortcutTriggered, [](const QString& hotkey_name) {
+    MainWindow mainWindow;
+
+    QObject::connect(osUtils, &OSUtilsBase::globalShortcutTriggered, [&mainWindow](const QString& hotkey_name) {
         qDebug() << hotkey_name <<  " pressed!";
+        qDebug() << "Width:" << mainWindow.geometry().width();
+        qDebug() << "Height:" << mainWindow.geometry().height();
     });
 
-    MainWindow w;
-    w.setWindowFlags(w.windowFlags() | Qt::WindowStaysOnTopHint);
-    w.show();
+
+    mainWindow.show();
+    mainWindow.moveToDefaultPos();
+
     return app.exec();
 }
