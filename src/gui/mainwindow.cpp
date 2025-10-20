@@ -15,16 +15,20 @@ MainWindow::MainWindow(QWidget *parent)
 
     setWindowFlags(windowFlags() | Qt::WindowStaysOnTopHint | Qt::FramelessWindowHint);
     setWindowFlags(windowFlags() & ~Qt::FramelessWindowHint);
-    setWindowOpacity(1);
+    setWindowOpacity(0.5);
 
     m_default_geometry = calculateDefaultGeometry();
     setFixedSize(m_default_geometry.width(), m_default_geometry.height());
 
     m_subtitle_surface.setReadOnly(true);
+    m_subtitle_surface.setFocusPolicy(Qt::NoFocus);
+    //m_subtitle_surface.setFrameShape(QFrame::NoFrame);
+    m_subtitle_surface.setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    m_subtitle_surface.setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     m_subtitle_surface.setGeometry(0, 0, width(), height());
     m_subtitle_surface.setFont(calculateDefaultFont());
     m_subtitle_surface.setAlignment(Qt::AlignCenter);
-    m_subtitle_surface.setAttribute(Qt::WA_TranslucentBackground);
+    //m_subtitle_surface.setAttribute(Qt::WA_TranslucentBackground);
     m_subtitle_surface.insertPlainText("setWindowFlags(windowFlags() | Qt::WindowStaysOnTopHint | Qt::FramelessWindowHint);");
 
 
