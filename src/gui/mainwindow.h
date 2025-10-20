@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QTextEdit>
 #include <QMouseEvent>
+#include <QPushButton>
 
 #include "hiding_widget.h"
 
@@ -37,9 +38,12 @@ private:
     static constexpr double m_default_font_scaling {0.04};
     static constexpr double m_default_bot_margin_scaling {0.08};
     static constexpr double m_default_height_scaling {2.2};
+    static constexpr double m_default_button_width_scaling {0.02};
 
     Ui::MainWindow *ui;
     QTextEdit m_subtitle_surface;
+    QPushButton m_expand_timer_button;
+    QPushButton m_expand_menu_button;
     QPoint m_drag_position;
     QRect m_default_geometry;
 };

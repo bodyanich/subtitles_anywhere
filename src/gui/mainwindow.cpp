@@ -1,12 +1,15 @@
-#include "mainwindow.h"
-#include "./ui_mainwindow.h"
-
 #include <QScreen>
 #include <QRect>
+#include <QDebug>
+
+#include "mainwindow.h"
+#include "./ui_mainwindow.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
+    , m_expand_timer_button {this}
+    , m_expand_menu_button {this}
     , m_subtitle_surface {this}
     , m_drag_position{}
     , m_default_geometry{}
@@ -15,24 +18,29 @@ MainWindow::MainWindow(QWidget *parent)
 
     setWindowFlags(windowFlags() | Qt::WindowStaysOnTopHint | Qt::FramelessWindowHint);
     setWindowFlags(windowFlags() & ~Qt::FramelessWindowHint);
-    setWindowOpacity(0.5);
+    setWindowOpacity(1);
 
     m_default_geometry = calculateDefaultGeometry();
+    //setGeometry(m_default_geometry);
     setFixedSize(m_default_geometry.width(), m_default_geometry.height());
+
+    int default_button_width = m_default_button_width_scaling * width();
 
     m_subtitle_surface.setReadOnly(true);
     m_subtitle_surface.setFocusPolicy(Qt::NoFocus);
     //m_subtitle_surface.setFrameShape(QFrame::NoFrame);
     m_subtitle_surface.setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     m_subtitle_surface.setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    m_subtitle_surface.setGeometry(0, 0, width(), height());
+    m_subtitle_surface.setGeometry(0, 0, width() - default_button_width, height());
     m_subtitle_surface.setFont(calculateDefaultFont());
     m_subtitle_surface.setAlignment(Qt::AlignCenter);
     //m_subtitle_surface.setAttribute(Qt::WA_TranslucentBackground);
     m_subtitle_surface.insertPlainText("setWindowFlags(windowFlags() | Qt::WindowStaysOnTopHint | Qt::FramelessWindowHint);");
 
-
-    //ui->centralwidget->setLayout(ui->verticalLayout);
+    int button_height = m_default_geometry.height() / 2;
+    m_expand_timer_button.setMaximumHeight(button_height);
+    m_expand_timer_button.setGeometry(m_subtitle_surface.width(), 0, default_button_width, button_height);
+    m_expand_menu_button.setGeometry(m_subtitle_surface.width(),  m_expand_timer_button.height(), default_button_width,  button_height);
 }
 
 MainWindow::~MainWindow()
@@ -52,6 +60,10 @@ QRect MainWindow::calculateDefaultGeometry()
     int defaultHeight = defaultFont * m_default_height_scaling;
     int defaultX = (w - defaultWidth) / 2;
     int defaultY = h - bottomMargin - defaultHeight;
+
+    qDebug() << "screen width" << screenRect.width();
+    qDebug() << "defaultWidth" << defaultWidth;
+    qDebug() << "defaultHeight" << defaultHeight;
 
     return QRect{defaultX, defaultY, defaultWidth, defaultHeight};
 }
@@ -74,7 +86,15 @@ void MainWindow::moveToDefaultPos()
 
 void MainWindow::resizeEvent(QResizeEvent *event)
 {
-    m_subtitle_surface.setGeometry(0, 0, width(), height());
+    m_subtitle_surface.setGeometry(0, 0, width() - std::max(m_expand_timer_button.width(), m_expand_menu_button.width()), height());
+
+    int default_button_width = m_default_button_width_scaling * width();
+    int button_height = m_default_geometry.height() / 2;
+    int half_surf_height = m_subtitle_surface.height() / 2;
+
+    m_expand_timer_button.setGeometry(m_subtitle_surface.width(), half_surf_height - button_height, default_button_width, button_height);
+    m_expand_menu_button.setGeometry(m_subtitle_surface.width(),  half_surf_height, default_button_width,  button_height);
+
     QWidget::resizeEvent(event);
 }
 
